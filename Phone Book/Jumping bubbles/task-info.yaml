@@ -1,0 +1,87 @@
+type: edu
+custom_name: stage2
+files:
+- name: src/phonebook/Main.kt
+  visible: true
+  text: |2
+
+    package phonebook
+
+
+    fun main() {
+        val directoryFile = java.io.File("C:\\Users\\Admin\\Desktop\\directory.txt")
+        val findFile = java.io.File("C:\\Users\\Admin\\Desktop\\find.txt")
+
+        val contactList = directoryFile.readLines();
+
+        val searchList = findFile.readLines();
+
+        var foundContacts = 0
+
+        println("Start searching...")
+        var startTime = System.currentTimeMillis()
+        for (name in searchList) {
+            for (contact in contactList) {
+                if (contact.contains(name)) {
+                    foundContacts++
+                    break
+                }
+            }
+        }
+        var endTime = System.currentTimeMillis()
+
+        println("Found $foundContacts / ${searchList.size} entries. Time taken: ${minConverter(endTime - startTime)} ")
+    }
+
+    fun minConverter(milliSeconds: Long): String {
+        val s = milliSeconds / 1000
+        val ms = milliSeconds % 1000
+        val sec = s % 60
+        val min = s / 60
+
+        return ("$min min. $sec sec. $ms ms.")
+    }
+  learner_created: false
+- name: test/PhoneBookTest.java
+  visible: false
+  text: |
+    import org.hyperskill.hstest.stage.StageTest;
+    import org.hyperskill.hstest.testcase.CheckResult;
+    import org.hyperskill.hstest.testcase.TestCase;
+    import phonebook.MainKt;
+
+    import java.util.Arrays;
+    import java.util.List;
+
+    public class PhoneBookTest extends StageTest {
+        public PhoneBookTest() {
+            super(MainKt.class);
+        }
+
+        @Override
+        public List<TestCase> generate() {
+            return Arrays.asList(
+                new TestCase().setTimeLimit(30 * 60 * 1000)
+            );
+        }
+
+        @Override
+        public CheckResult check(String reply, Object clue) {
+            reply = reply.toLowerCase();
+            return new CheckResult(
+                reply.contains("start searching")
+                    && reply.contains("found")
+                    && reply.contains("min.")
+                    && reply.contains("sec.")
+                    && reply.contains("ms.")
+                    && reply.contains("sorting time")
+                    && reply.contains("searching time")
+                    && reply.contains("linear search")
+                    && reply.contains("bubble sort")
+                    && reply.contains("jump search"));
+        }
+    }
+  learner_created: false
+feedback_link: https://hyperskill.org/projects/86/stages/477/implement
+status: Solved
+record: 2
